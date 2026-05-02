@@ -5,20 +5,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: ghcr.io/devkitpro/switch-dev:latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y p7zip-full curl
-
-      # 用 devkitPro 官方脚本一键安装，解决链接失效问题
-      - name: Install devkitPro
-        run: |
-          curl -L https://apt.devkitpro.org/install-devkitpro-pacman | sudo bash
-          sudo apt-get update
-          sudo dkp-pacman -Syu --noconfirm switch-dev devkitARM
+      - name: Install 7-Zip
+        run: apt-get update && apt-get install -y p7zip-full
 
       - name: Unzip source
         run: 7z x hekate-master.7z
