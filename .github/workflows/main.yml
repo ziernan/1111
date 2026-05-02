@@ -11,13 +11,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y p7zip-full wget curl
+          sudo apt-get install -y p7zip-full curl
 
-      # 改用 GitHub 的 CDN 镜像，解决下载超时问题
+      # 用 devkitPro 官方脚本一键安装，解决链接失效问题
       - name: Install devkitPro
         run: |
-          wget https://github.com/devkitPro/pacman/releases/download/v1.0.2/devkitpro-pacman.deb --no-check-certificate
-          sudo dpkg -i devkitpro-pacman.deb || sudo apt-get install -f -y
+          curl -L https://apt.devkitpro.org/install-devkitpro-pacman | sudo bash
           sudo apt-get update
           sudo dkp-pacman -Syu --noconfirm switch-dev devkitARM
 
