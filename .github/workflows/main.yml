@@ -8,12 +8,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 安装7-Zip，用来解压你的 .7z 压缩包
       - name: Install 7-Zip
         run: sudo apt-get update && sudo apt-get install -y p7zip-full
 
+      # 解压你的 hekate-master.7z
       - name: Unzip source
-        run: 7z x *.7z
+        run: 7z x hekate-master.7z
 
+      # 安装 Switch 编译工具链
       - name: Install devkitPro
         run: |
           wget https://github.com/devkitPro/pacman/releases/latest/download/devkitpro-pacman.deb
@@ -21,9 +24,11 @@ jobs:
           sudo apt-get update
           sudo dkp-pacman -Syu --noconfirm switch-dev devkitARM
 
+      # 进入解压后的 hekate-master 文件夹编译
       - name: Build
-        run: make -C hekate-master
+        run: cd hekate-master && make
 
+      # 把编译好的 hekate.bin 打包，供你下载
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
