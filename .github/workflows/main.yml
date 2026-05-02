@@ -1,0 +1,26 @@
+name: Build Hekate
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install p7zip
+        run: sudo apt-get update && sudo apt-get install -y p7zip-full
+      - name: Unzip source
+        run: 7z x hekate.7z
+      - name: Install devkitPro
+        run: |
+          wget https://github.com/devkitPro/pacman/releases/latest/download/devkitpro-pacman.deb
+          sudo dpkg -i devkitpro-pacman.deb
+          sudo apt-get update
+          sudo dkp-pacman -Syu --noconfirm switch-dev devkitARM
+      - name: Build
+        run: cd hekate-master && make
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hekate
+          path: hekate-master/hekate.bin
